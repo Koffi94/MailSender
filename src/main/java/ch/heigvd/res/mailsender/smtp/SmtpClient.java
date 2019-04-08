@@ -74,7 +74,7 @@ public class SmtpClient {
             }
             LOG.info(lineReader);
 
-            for(String line : mail.getPrankMessage()) {
+            for(String line : mail.getMessage()) {
                 writer.println(line);
             }
 
