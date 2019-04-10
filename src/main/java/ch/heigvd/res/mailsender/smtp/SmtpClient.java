@@ -41,14 +41,14 @@ public class SmtpClient {
             // EHLO
             writer.printf("EHLO SmtpClient\r\n");
             lineReader = reader.readLine();
-            while(lineReader.startsWith("250")) {
+            while(lineReader.startsWith("250 Ok")) {
                 reader.readLine();
                 LOG.info(lineReader);
             }
 
 
             // MAIL FROM
-            writer.printf("MAIL FROM: " + mail.from() + "\r\n");
+            writer.printf("MAIL FROM: " + mail.from()   );
             lineReader = reader.readLine();
             if(!lineReader.startsWith("250")) {
                 throw new IOException("Bad answer from server after MAIL FROM: " + lineReader);
@@ -58,25 +58,25 @@ public class SmtpClient {
 
             // RCPT TO
             for(String dest : mail.to()) {
-                writer.printf("RCPT TO: " + dest + "\r\n");
+                writer.printf("RCPT TO: " + dest + ",");
                 lineReader = reader.readLine();
                 if(!lineReader.startsWith("250")) {
                     throw new IOException("Bad answer from server after RCPT TO: " + dest + lineReader);
                 }
                 LOG.info(lineReader);
             }
+            writer.printf("\r\n");
 
             // DATA
             writer.printf("DATA\r\n");
             lineReader = reader.readLine();
-            if(!lineReader.startsWith("354")) {
+            /*if(!lineReader.startsWith("354")) {
                 throw new IOException("Bad answer from server after DATA: " + lineReader);
-            }
+            }*/
             LOG.info(lineReader);
 
-            for(String line : mail.getMessage()) {
-                writer.println(line);
-            }
+            writer.printf(mail.getMessage());
+
 
             // End message and quit
             writer.printf(".\r\n");

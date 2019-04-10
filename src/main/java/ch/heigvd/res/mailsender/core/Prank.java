@@ -3,13 +3,13 @@ package ch.heigvd.res.mailsender.core;
 import java.util.ArrayList;
 
 public class Prank {
-    ArrayList<String> prankMessage;
+    String prankMessage;
 
-    public Prank(ArrayList<String> prankMessage) {
+    public Prank(String prankMessage) {
         this.prankMessage = prankMessage;
     }
 
-    public ArrayList<String> getPrankMessage() {
+    public String getPrankMessage() {
         return prankMessage;
     }
 }
