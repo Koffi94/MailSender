@@ -1,5 +1,7 @@
 package ch.heigvd.res.mailsender.config;
 
+import ch.heigvd.res.mailsender.core.Person;
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,8 +20,8 @@ public class ConfigManager {
     private int SmtpServerPort;
     private int nbGroups;
     private String sender;
-    private ArrayList<String> receivers;
-    private ArrayList<String> messages;
+    private ArrayList<Person> receivers;
+    private ArrayList<String> messagesPrank;
 
     // Files directory
     public static String CONFIG_DIRECTORY = "./src/main/java/ch/heigvd/res/mailsender/config/";
@@ -32,11 +34,11 @@ public class ConfigManager {
         properties = new Properties();
         sender = "";
         receivers = new ArrayList();
-        messages = new ArrayList();
+        messagesPrank = new ArrayList();
 
         try {
             parsePropertyFile(CONFIG_DIRECTORY + "config.properties");
-            setMessages(CONFIG_DIRECTORY + "messages.utf8", messages);
+            setMessages(CONFIG_DIRECTORY + "messages.utf8", messagesPrank);
             sender = setSender(CONFIG_DIRECTORY + "sender.utf8");
             parseReceiverFile(CONFIG_DIRECTORY + "receivers.utf8", receivers);
         } catch (IOException e) {
@@ -110,7 +112,7 @@ public class ConfigManager {
      * @throws IOException
      * inspired by https://www.geeksforgeeks.org/different-ways-reading-text-file-java/
      */
-    private void parseReceiverFile(String urlFile, ArrayList<String> receivers) throws IOException {
+    private void parseReceiverFile(String urlFile, ArrayList<Person> receivers) throws IOException {
         if(!receivers.isEmpty()) {
             receivers.clear();
         }
@@ -120,7 +122,7 @@ public class ConfigManager {
 
         String st;
         while ((st = br.readLine()) != null) {
-            receivers.add(st);
+            receivers.add(new Person(st));
         }
     }
 
@@ -128,12 +130,12 @@ public class ConfigManager {
         return sender;
     }
 
-    public ArrayList<String> getReceivers() {
+    public ArrayList<Person> getReceivers() {
         return receivers;
     }
 
     public ArrayList<String> getMessages() {
-        return messages;
+        return messagesPrank;
     }
 
     public String getSmtpServerAddress() {

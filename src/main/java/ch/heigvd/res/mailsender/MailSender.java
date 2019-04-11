@@ -1,39 +1,27 @@
 package ch.heigvd.res.mailsender;
 
 import ch.heigvd.res.mailsender.config.ConfigManager;
-import ch.heigvd.res.mailsender.core.Group;
+import ch.heigvd.res.mailsender.core.Groups;
 import ch.heigvd.res.mailsender.core.Mail;
 import ch.heigvd.res.mailsender.core.Person;
-import ch.heigvd.res.mailsender.core.Prank;
 import ch.heigvd.res.mailsender.smtp.SmtpClient;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Random;
 
 public class MailSender {
     public static void main(String[] args) {
+        Random number = new Random();
         ConfigManager config = new ConfigManager();
+        Groups groupeReceiver = new Groups();
+        SmtpClient smtpClient = new SmtpClient(config.getSmtpServerAddress(), config.getSmtpServerPort());
 
-        Person sender = new Person(config.getSender());
 
-        List<Person> personReceiver = new ArrayList<Person>();
-        List<Group>  groupReceiver = new ArrayList<Group>();
-        int count = 0;
+        groupeReceiver.addGroupOfPeople(config.getReceivers(),config.getNbGroups());
 
-        for(int i = 0; i <= config.getReceivers().size(); ++i){
-            if((i % config.getNbGroups() == 0 && count != 0 && count != config.getNbGroups() -1) || ){
-
-            }
-            personReceiver.add(new Person(config.getReceivers().get(i)));
-            count++;
+        for(int i = 0; i < config.getNbGroups(); ++i){
+            Mail newPrank = new Mail(new Person(config.getSender()),  groupeReceiver.getGroupOfPeople().get(i), config.getMessages().get(number.nextInt(config.getMessages().size())));
+            smtpClient.sendMail(newPrank);
         }
-
-
-        //Mail fakeMail = new Mail(sender, receiver, message);
-
-        SmtpClient smtpService = new SmtpClient(config.getSmtpServerAddress(), config.getSmtpServerPort());
-
-        smtpService.sendMail(fakeMail);
 
     }
 }

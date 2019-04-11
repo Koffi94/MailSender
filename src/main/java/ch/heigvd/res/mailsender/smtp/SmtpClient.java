@@ -1,6 +1,7 @@
 package ch.heigvd.res.mailsender.smtp;
 
 import ch.heigvd.res.mailsender.core.Mail;
+import ch.heigvd.res.mailsender.core.Person;
 
 import java.io.*;
 import java.net.Socket;
@@ -40,15 +41,13 @@ public class SmtpClient {
 
             // EHLO
             writer.printf("EHLO SmtpClient\r\n");
-            lineReader = reader.readLine();
-            while(lineReader.startsWith("250 Ok")) {
-                reader.readLine();
+            while(!lineReader.equals("250 Ok")) {
+                lineReader = reader.readLine();
                 LOG.info(lineReader);
             }
 
-
             // MAIL FROM
-            writer.printf("MAIL FROM: " + mail.from()   );
+            writer.printf("MAIL FROM: " + mail.from());
             lineReader = reader.readLine();
             if(!lineReader.startsWith("250")) {
                 throw new IOException("Bad answer from server after MAIL FROM: " + lineReader);
@@ -57,22 +56,23 @@ public class SmtpClient {
 
 
             // RCPT TO
-            for(String dest : mail.to()) {
+            for(Person dest : mail.to().getGroupOfPeople()) {
                 writer.printf("RCPT TO: " + dest + ",");
-                lineReader = reader.readLine();
-                if(!lineReader.startsWith("250")) {
-                    throw new IOException("Bad answer from server after RCPT TO: " + dest + lineReader);
-                }
-                LOG.info(lineReader);
             }
             writer.printf("\r\n");
+
+            lineReader = reader.readLine();
+            if(!lineReader.startsWith("250")) {
+                throw new IOException("Bad answer from server after RCPT TO: " + lineReader);
+            }
+            LOG.info(lineReader);
 
             // DATA
             writer.printf("DATA\r\n");
             lineReader = reader.readLine();
-            /*if(!lineReader.startsWith("354")) {
+            if(!lineReader.startsWith("354")) {
                 throw new IOException("Bad answer from server after DATA: " + lineReader);
-            }*/
+            }
             LOG.info(lineReader);
 
             writer.printf(mail.getMessage());
@@ -92,7 +92,6 @@ public class SmtpClient {
                 throw new IOException("Bad answer from server after QUIT: " + lineReader);
             }
             LOG.info(lineReader);
-
         } catch (IOException ex) {
             LOG.log(Level.SEVERE, null, ex);
         } finally { // Close input and output streams
