@@ -19,12 +19,13 @@ public class ConfigManager {
     private String SmtpServerAddress;
     private int SmtpServerPort;
     private int nbGroups;
-    private String sender;
+    private ArrayList<String>sender;
     private ArrayList<Person> receivers;
     private ArrayList<String> messagesPrank;
+    private boolean login;
 
     // Files directory
-    public static String CONFIG_DIRECTORY = "./src/main/java/ch/heigvd/res/mailsender/config/";
+    public static String CONFIG_DIRECTORY = "./";
 
     /**
      * Set all variable with all information from files
@@ -32,15 +33,15 @@ public class ConfigManager {
     public ConfigManager() {
         // Initialise variable
         properties = new Properties();
-        sender = "";
+        sender = new ArrayList();
         receivers = new ArrayList();
         messagesPrank = new ArrayList();
 
         try {
             parsePropertyFile(CONFIG_DIRECTORY + "config.properties");
-            setMessages(CONFIG_DIRECTORY + "messages.utf8", messagesPrank);
-            sender = setSender(CONFIG_DIRECTORY + "sender.utf8");
-            parseReceiverFile(CONFIG_DIRECTORY + "receivers.utf8", receivers);
+            setMessages(CONFIG_DIRECTORY + "messages.utf8");
+            setSenders(CONFIG_DIRECTORY + "sender.utf8");
+            parseReceiverFile(CONFIG_DIRECTORY + "receivers.utf8");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -62,6 +63,7 @@ public class ConfigManager {
         SmtpServerAddress = properties.getProperty("SmtpServerAddress");
         SmtpServerPort = Integer.parseInt(properties.getProperty("SmtpServerPort"));
         nbGroups = Integer.parseInt(properties.getProperty("Groups"));
+        login = Boolean.parseBoolean(properties.getProperty("Login"));
     }
 
     /**
@@ -70,26 +72,22 @@ public class ConfigManager {
      * @return Return the sender
      * @throws IOException
      */
-    private String setSender(String urlFile) throws IOException{
+    private void setSenders(String urlFile) throws IOException{
         File file = new File(urlFile);
         BufferedReader br = new BufferedReader(new FileReader(file));
 
-        String value = br.readLine()  + "\r\n";
-
-        return value;
+        String st;
+        while ((st = br.readLine()) != null) {
+            sender.add(st);
+        }
     }
 
     /**
      * Method who will set the multiple message prank
      * @param urlFile Directory file
-     * @param Messages All messages
      * @throws IOException
      */
-    private void setMessages(String urlFile, ArrayList<String> Messages) throws IOException{
-        if(!Messages.isEmpty()) {
-            Messages.clear();
-        }
-
+    private void setMessages(String urlFile) throws IOException{
         File file = new File(urlFile);
         BufferedReader br = new BufferedReader(new FileReader(file));
 
@@ -97,7 +95,7 @@ public class ConfigManager {
         while ((st = br.readLine()) != null) {
             // set the next test if it's ---
             if(st.equals("---")){
-                Messages.add(tmp);
+                messagesPrank.add(tmp);
                 tmp = "";
             } else {
                 tmp += st + "\r\n";
@@ -108,14 +106,10 @@ public class ConfigManager {
     /**
      * Method who will parse receiver file
      * @param urlFile Directory file
-     * @param receivers List with all receivers
      * @throws IOException
      * inspired by https://www.geeksforgeeks.org/different-ways-reading-text-file-java/
      */
-    private void parseReceiverFile(String urlFile, ArrayList<Person> receivers) throws IOException {
-        if(!receivers.isEmpty()) {
-            receivers.clear();
-        }
+    private void parseReceiverFile(String urlFile) throws IOException {
 
         File file = new File(urlFile);
         BufferedReader br = new BufferedReader(new FileReader(file));
@@ -126,7 +120,7 @@ public class ConfigManager {
         }
     }
 
-    public String getSender() {
+    public ArrayList<String> getSender() {
         return sender;
     }
 
@@ -148,6 +142,10 @@ public class ConfigManager {
 
     public int getNbGroups() {
         return nbGroups;
+    }
+
+    public boolean isLogin() {
+        return login;
     }
 }
 
