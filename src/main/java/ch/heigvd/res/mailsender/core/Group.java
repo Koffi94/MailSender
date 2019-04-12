@@ -6,18 +6,18 @@ import java.util.List;
 /**
  * Define group
  */
-public class Group{
-    private List<Person> groupOfPeople;
+public class Group extends Groups{
+    private List<Person> people;
 
     public Group(){
-        groupOfPeople = new ArrayList<Person>();
+        people = new ArrayList<Person>();
     }
 
     public void addPersonInGroup(Person person){
-        groupOfPeople.add(person);
+        people.add(person);
     }
 
     public List<Person> getGroupOfPeople() {
-        return groupOfPeople;
+        return people;
     }
 }

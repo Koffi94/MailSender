@@ -7,10 +7,10 @@ import java.util.List;
  * Set all groups
  */
 public class Groups {
-    private List<Group> groupOfPeople;
+    private List<Group> groups;
 
     public Groups() {
-        groupOfPeople = new ArrayList<Group>();
+        groups = new ArrayList<Group>();
     }
 
     /**
@@ -37,12 +37,12 @@ public class Groups {
                 tmpGroup.addPersonInGroup(tmpReceiver.get(0));
                 tmpReceiver.remove(0);
             }
-            groupOfPeople.add(tmpGroup);
+            groups.add(tmpGroup);
         }
     }
 
-    public List<Group> getGroupOfPeople() {
-        return groupOfPeople;
+    public List<Group> getGroups() {
+        return groups;
     }
 
 }

@@ -19,7 +19,7 @@ public class ConfigManager {
     private String SmtpServerAddress;
     private int SmtpServerPort;
     private int nbGroups;
-    private ArrayList<String>sender;
+    private ArrayList<Person>sender;
     private ArrayList<Person> receivers;
     private ArrayList<String> messagesPrank;
     private boolean login;
@@ -40,9 +40,14 @@ public class ConfigManager {
         try {
             parsePropertyFile(CONFIG_DIRECTORY + "config.properties");
             setMessages(CONFIG_DIRECTORY + "messages.utf8");
-            setSenders(CONFIG_DIRECTORY + "sender.utf8");
-            parseReceiverFile(CONFIG_DIRECTORY + "receivers.utf8");
-        } catch (IOException e) {
+            parseUsers(CONFIG_DIRECTORY + "sender.utf8");
+            parseUsers(CONFIG_DIRECTORY + "receivers.utf8");
+
+            if(receivers.size() / nbGroups < 3 || receivers.size() == 0 || sender.size() == 0 || messagesPrank.size() == 0){
+                throw new RuntimeException("You have a problem with your file(s) \n - You need sender(s)\n - You need minimum 3 people per group \n - You need message(s)");
+
+            }
+        } catch(IOException e){
             e.printStackTrace();
         }
     }
@@ -67,18 +72,22 @@ public class ConfigManager {
     }
 
     /**
-     * Method who will set the sender
+     * Method who will set the different persone
      * @param urlFile Directory file
-     * @return Return the sender
      * @throws IOException
      */
-    private void setSenders(String urlFile) throws IOException{
+    private void parseUsers(String urlFile) throws IOException{
         File file = new File(urlFile);
         BufferedReader br = new BufferedReader(new FileReader(file));
 
         String st;
         while ((st = br.readLine()) != null) {
-            sender.add(st);
+            if(urlFile.contains("sender")){
+                sender.add(new Person(st));
+            } else {
+                receivers.add(new Person(st));
+            }
+
         }
     }
 
@@ -103,24 +112,7 @@ public class ConfigManager {
         }
     }
 
-    /**
-     * Method who will parse receiver file
-     * @param urlFile Directory file
-     * @throws IOException
-     * inspired by https://www.geeksforgeeks.org/different-ways-reading-text-file-java/
-     */
-    private void parseReceiverFile(String urlFile) throws IOException {
-
-        File file = new File(urlFile);
-        BufferedReader br = new BufferedReader(new FileReader(file));
-
-        String st;
-        while ((st = br.readLine()) != null) {
-            receivers.add(new Person(st));
-        }
-    }
-
-    public ArrayList<String> getSender() {
+    public ArrayList<Person> getSender() {
         return sender;
     }
 

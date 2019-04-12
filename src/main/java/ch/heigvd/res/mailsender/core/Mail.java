@@ -5,12 +5,12 @@ package ch.heigvd.res.mailsender.core;
  */
 public class Mail {
     Person personFrom;
-    Group groupsTo;
+    Person personTo;
     String message;
 
-    public Mail(Person person, Group group, String message){
-        this.personFrom = person;;
-        this.groupsTo = group;
+    public Mail(Person personFrom, Person personTo, String message){
+        this.personFrom = personFrom;
+        this.personTo = personTo;
         this.message = message;
     }
 
@@ -18,8 +18,8 @@ public class Mail {
         return personFrom;
     }
 
-    public Group to() {
-        return groupsTo;
+    public Person to() {
+        return personTo;
     }
 
     public String getMessage() {

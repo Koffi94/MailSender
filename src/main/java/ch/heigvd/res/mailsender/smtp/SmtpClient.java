@@ -1,7 +1,6 @@
 package ch.heigvd.res.mailsender.smtp;
 
 import ch.heigvd.res.mailsender.core.Mail;
-import ch.heigvd.res.mailsender.core.Person;
 
 import java.io.*;
 import java.net.Socket;
@@ -90,15 +89,14 @@ public class SmtpClient {
 
 
             // RCPT TO
-            for(Person dest : mail.to().getGroupOfPeople()) {
-                writer.printf("RCPT TO: <" + dest + ">\r\n");
+                writer.printf("RCPT TO: <" + mail.to() + ">\r\n");
                 lineReader = reader.readLine();
                 LOG.info(lineReader);
 
                 if(!lineReader.startsWith("250")) {
                     throw new IOException("Bad answer from server after RCPT TO: " + lineReader);
                 }
-            }
+
 
             // DATA
             writer.printf("DATA\r\n");
