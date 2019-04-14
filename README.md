@@ -33,7 +33,7 @@ We have 5 files who is important
   - SmtpServerAddres: Define the address of SMTP server
   - SmtpServerPort : Define the port
   - Groups : Define the number of groups
-  - Login : Define if we need a login
+  - Login : Define if we need a login (login=true or login=false)
 
 - sender.utg8 : We will have all emails that will send the fake emails
 
