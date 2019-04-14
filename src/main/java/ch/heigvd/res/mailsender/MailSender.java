@@ -34,6 +34,7 @@ public class MailSender {
             for(Person receiversOfGroup : groupeReceiver.getGroups().get(i).getGroupOfPeople()) {
                 Mail newPrank = new Mail(config.getSender().get(number.nextInt(config.getSender().size())), receiversOfGroup, config.getMessages().get(number.nextInt(config.getMessages().size())));
                 smtpClient.sendMail(newPrank);
+                Thread.sleep(5000);
             }
         }
 

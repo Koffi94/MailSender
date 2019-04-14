@@ -1,5 +1,6 @@
 package ch.heigvd.res.mailsender.core;
 
+
 /**
  * Define the Mail
  */

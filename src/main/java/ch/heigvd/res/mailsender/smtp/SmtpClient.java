@@ -108,7 +108,6 @@ public class SmtpClient {
 
             writer.printf(mail.getMessage());
 
-
             // End message and quit
             writer.printf(".\r\n");
             lineReader = reader.readLine();
