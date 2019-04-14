@@ -47,7 +47,7 @@ We have 5 files who is important
 
   - All messages are separated with 3 - like this 
 
-  - Message is chosen randomly
+  - Message is chosen randomly (Please respect the from, subject and to)
 
      ![messages.utf8](figures/f1.png)
 

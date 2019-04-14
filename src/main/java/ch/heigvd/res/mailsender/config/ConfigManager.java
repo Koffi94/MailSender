@@ -25,7 +25,7 @@ public class ConfigManager {
     private boolean login;
 
     // Files directory
-    public static String CONFIG_DIRECTORY = "./";
+    public static String CONFIG_DIRECTORY = "./application/";
 
     /**
      * Set all variable with all information from files

@@ -4,6 +4,7 @@ import ch.heigvd.res.mailsender.core.Mail;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.Base64;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -64,14 +65,16 @@ public class SmtpClient {
                 }
                 LOG.info(lineReader);
 
-                writer.printf(login + "\r\n");
+                String encodedLogin = Base64.getEncoder().encodeToString(login.getBytes());
+                writer.printf( encodedLogin+ "\r\n");
                 lineReader = reader.readLine();
                 if(!lineReader.startsWith("334")) {
                     throw new IOException("LOGIN error :" + lineReader);
                 }
                 LOG.info(lineReader);
 
-                writer.printf(password + "\r\n");
+                String encodedPassword = Base64.getEncoder().encodeToString(password.getBytes());
+                writer.printf(encodedPassword + "\r\n");
                 lineReader = reader.readLine();
                 if(!lineReader.startsWith("235")) {
                     throw new IOException("PASSWORD error :" + lineReader);
@@ -105,6 +108,11 @@ public class SmtpClient {
                 throw new IOException("Bad answer from server after DATA: " + lineReader);
             }
             LOG.info(lineReader);
+
+            mail.setMessage(mail.getMessage().replaceAll("FromMail", mail.from().toString()));
+            mail.setMessage(mail.getMessage().replaceAll("ToMail", mail.to().toString()));
+
+            mail.getMessage().replaceAll("ToMail", mail.to().toString());
 
             writer.printf(mail.getMessage());
 
